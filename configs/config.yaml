@@ -1,0 +1,67 @@
+experiment:
+  sample_start: "2000-01-01"
+  sample_end: "2022-12-31"
+  random_seed: 7
+
+data:
+  expected_assets: 64
+  return_convention: simple
+  require_sorted_unique_dates: true
+  require_availability_exact_match: true
+  require_finite_nonmissing_returns: true
+
+features:
+  vol_span: 60
+  momentum_horizons: [1, 21, 63, 126, 252]
+  macd_windows: [[8, 24], [16, 48], [32, 96]]
+  macd_price_std_window: 63
+  macd_normalized_std_window: 252
+  winsor_halflife: 252
+  winsor_multiple: 5.0
+  trading_days: 252
+  vol_ewm_adjust: true
+  vol_ewm_ignore_na: true
+  vol_min_periods: 20
+  vol_bias: true
+  macd_ewm_adjust: false
+  macd_ewm_ignore_na: true
+  winsor_ewm_adjust: false
+  winsor_ewm_ignore_na: true
+  winsor_bias: false
+  multi_period_return_method: compound_observed
+  rolling_calendar: asset_observations
+  rolling_ddof: 1
+  macd_ewm_min_periods: 1
+  macd_price_std_min_periods: 63
+  macd_normalized_std_min_periods: 252
+  winsor_min_periods: 20
+  winsor_include_current: true
+  mask_features_to_return_availability: true
+
+graph:
+  lookbacks: [252, 504, 756, 1008, 1260]
+  parameter_grid: [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1.0, 5.0, 10.0]
+  edge_tolerance: 1.0e-8
+  calendar_policy: causal_ffill
+  feature_ffill_limit: 5
+  require_current_unfilled_features: true
+  prototype_alpha: 0.1
+  prototype_beta: 0.1
+  prototype_solver: CLARABEL
+  prototype_date: "2022-12-30"
+  dynamic_prototype_dates: 60
+  dynamic_prototype_train_fraction: 0.70
+  validation_fraction: 0.10
+  validation_metric: forecast_correlation
+  validation_max_dates: 8
+  validation_internal_train_fraction: 0.60
+  validation_min_days: 8
+  production_reference_interval: 60
+
+portfolio:
+  annual_asset_vol_target: 0.15
+  trading_days: 252
+  portfolio_vol_span: 60
+  portfolio_vol_min_periods: 20
+  portfolio_vol_ewm_adjust: false
+  portfolio_vol_leverage_cap: null
